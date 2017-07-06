@@ -24,3 +24,11 @@ spec:
               value: {{ .Values.channel }}
             - name: FIELD
               value: {{ .Values.field }}
+          volumeMounts:
+            - name: kubeconfig
+              readOnly: false
+              mountPath: /root/.kube
+      volumes:
+        - name: kubeconfig
+          secret:
+            secretName: kubeconfig-{{ .Values.channel }}

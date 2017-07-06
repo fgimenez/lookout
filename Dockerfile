@@ -10,9 +10,9 @@ RUN apk add --update ca-certificates \
    && chmod +x ./linux-amd64/helm \
    && mv ./linux-amd64/helm /bin/helm \
    && rm -rf ./linux-amd64 \
-   && mkdir -p ~/.helm/plugins/ \
+   && mkdir -p /root/.helm/plugins/ \
    && curl -L https://github.com/app-registry/helm-plugin/releases/download/v0.3.7/registry-helm-plugin-v0.3.7-dev-linux-x64.tar.gz | tar xzf - registry \
-   && mv ./registry ~/.helm/plugins/ \
+   && mv ./registry /root/.helm/plugins/ \
    && apk del --purge deps \
    && rm /var/cache/apk/*
 
