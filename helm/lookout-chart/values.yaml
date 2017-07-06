@@ -1,5 +1,16 @@
 taskID: lookout-tacoshop-alpha
-targetURL: https://quay.io/cnr/api/v1/packages/fgimenez/tacoshop-chart/channels/alpha
+#  TODO: generic target
+# targetURL: https://quay.io/cnr/api/v1/packages/fgimenez/tacoshop-chart/channels/alpha
+organisation: fgimenez
+project: tacoshop-chart
+channel: alpha
 field: current
 targetCluster: alpha
-#jobContainer:
+# TODO: generic jobs
+# job:
+#   image: myimage
+#   cmd: mycmd
+#   secrets:
+#     - name: mysecret1
+#       path: mypath1
+#

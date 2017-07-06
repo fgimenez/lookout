@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -45,13 +47,13 @@ func main() {
 			select {
 			case <-tick:
 				log.Println("tick")
-				newValue, err = check()
+				newValue, err = check(os.Getenv("ORGANISATION"), os.Getenv("PROJECT"), os.Getenv("CHANNEL"), os.Getenv("FIELD"))
 				if err != nil {
 					log.Printf("error checking resource, %v", err)
 				}
 				if newValue != lastValue {
 					log.Printf("new value retrieved %v", newValue)
-					err = action()
+					err = action(os.Getenv("ORGANISATION"), os.Getenv("PROJECT"), os.Getenv("CHANNEL"))
 					if err != nil {
 						log.Printf("error executing action, %v", err)
 					} else {
@@ -74,8 +76,15 @@ func main() {
 	os.Exit(code)
 }
 
-func check() (string, error) {
-	r, err := client.Get(os.Getenv("TARGET_URL"))
+func check(organisation, project, channel, field string) (string, error) {
+	// TODO: generic target
+	// r, err := client.Get(os.Getenv("TARGET_URL"))
+	url := fmt.Sprintf("https://quay.io/cnr/api/v1/packages/%s/%s/channels/%s",
+		organisation,
+		project,
+		channel,
+	)
+	r, err := client.Get(url)
 	if err != nil {
 		return "", err
 	}
@@ -86,16 +95,62 @@ func check() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if val, ok := target[os.Getenv("FIELD")]; ok && val != "" {
+	if val, ok := target[field]; ok && val != "" {
 		return val.(string), nil
 	}
-	return "", fmt.Errorf("%s field not found in resource", os.Getenv("FIELD"))
+	return "", fmt.Errorf("%s field not found in resource", field)
 }
 
-func action() error {
-	cmd := exec.Command("kubectl", "create", "-f /jobs/default.yaml")
+func action(organisation, project, channel string) error {
+	// TODO trigger generic job
+	// cmd := exec.Command("kubectl", "create", "-f /jobs/default.yaml")
+	releaseExists, err := checkRelease(project)
+	if err != nil {
+		return err
+	}
+
+	cmdName := "helm"
+	var cmdArgs []string
+	pkg := fmt.Sprintf("quay.io/%s/%s:%s", organisation, project, channel)
+	if releaseExists {
+		cmdArgs = []string{"registry", "helm", "install", pkg, "-n " + project}
+
+	} else {
+		cmdArgs = []string{"registry", "helm", "upgrade", pkg, project}
+	}
+	cmd := exec.Command(cmdName, cmdArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	return cmd.Run()
+}
+
+func checkRelease(project string) (bool, error) {
+	var found bool
+	cmd := exec.Command("helm", "list", project)
+	cmdReader, err := cmd.StdoutPipe()
+	if err != nil {
+		return false, err
+	}
+
+	scanner := bufio.NewScanner(cmdReader)
+	go func() {
+		for scanner.Scan() {
+			if strings.HasPrefix(scanner.Text(), project) {
+				found = true
+				break
+			}
+		}
+	}()
+
+	err = cmd.Start()
+	if err != nil {
+		return false, err
+	}
+
+	err = cmd.Wait()
+	if err != nil {
+		return false, err
+	}
+	return found, nil
 }
