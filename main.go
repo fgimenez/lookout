@@ -119,10 +119,9 @@ func action(organisation, project, channel string) error {
 	var cmdArgs []string
 	pkg := fmt.Sprintf("quay.io/%s/%s:%s", organisation, project, channel)
 	if releaseExists {
-		cmdArgs = []string{"registry", "helm", "install", pkg, "-n " + project}
-
-	} else {
 		cmdArgs = []string{"registry", "helm", "upgrade", pkg, project}
+	} else {
+		cmdArgs = []string{"registry", "helm", "install", pkg, "-n " + project}
 	}
 	cmd := exec.Command(cmdName, cmdArgs...)
 	cmd.Stdout = os.Stdout
