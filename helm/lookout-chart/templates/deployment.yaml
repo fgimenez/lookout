@@ -12,15 +12,15 @@ spec:
         app: {{ .Values.taskID }}
     spec:
       containers:
-        - name: aaa
+        - name: {{ .Values.taskID }}
           image: quay.io/fgimenez/lookout:{{ .SHA }}
           imagePullPolicy: IfNotPresent
           env:
             - name: ORGANISATION
               value: {{ .Values.organisation }}
             - name: PROJECT
-              value: {{ .Values.organisation }}
+              value: {{ .Values.project }}
             - name: CHANNEL
-              value: {{ .Values.organisation }}
+              value: {{ .Values.channel }}
             - name: FIELD
               value: {{ .Values.field }}
