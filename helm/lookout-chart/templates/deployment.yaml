@@ -16,7 +16,11 @@ spec:
           image: quay.io/fgimenez/lookout:{{ .SHA }}
           imagePullPolicy: IfNotPresent
           env:
-            - name: TARGET_URL
-              value: {{ .Values.targetURL }}
+            - name: ORGANISATION
+              value: {{ .Values.organisation }}
+            - name: PROJECT
+              value: {{ .Values.organisation }}
+            - name: CHANNEL
+              value: {{ .Values.organisation }}
             - name: FIELD
               value: {{ .Values.field }}
