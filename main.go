@@ -15,6 +15,18 @@ import (
 var client = &http.Client{Timeout: 10 * time.Second}
 
 func main() {
+	if len(os.Args) > 1 {
+		if os.Args[1] == "version" {
+			fmt.Println("0.1.0")
+			return
+		}
+
+		if os.Args[1] == "--help" {
+			fmt.Println("Yet another tacoshop")
+			return
+		}
+	}
+
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan,
 		syscall.SIGHUP,
