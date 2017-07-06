@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: lookout-tacoshop-alpha
+  name: {{ .Values.taskID }}
   labels:
-    app: lookout-tacoshop-alpha
+    app: {{ .Values.taskID }}
 spec:
   selector:
-    app: lookout-tacoshop-alpha
+    app: {{ .Values.taskID }}
   ports:
     - port: 9999

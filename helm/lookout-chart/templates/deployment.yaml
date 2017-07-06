@@ -1,24 +1,22 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: lookout-tacoshop-alpha
+  name: {{ .Values.taskID }}
   labels:
-    app: lookout-tacoshop-alpha
+    app: {{ .Values.taskID }}
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: lookout-tacoshop-alpha
+        app: {{ .Values.taskID }}
     spec:
-      serviceAccountName: lookout
-      automountServiceAccountToken: true
       containers:
         - name: aaa
-          image: quay.io/fgimenez/lookout:c0694a750ef8726200801af52a0c40d24b94dc29
+          image: quay.io/fgimenez/lookout:{{ .SHA }}
           imagePullPolicy: IfNotPresent
           env:
             - name: TARGET_URL
-              value: https://quay.io/cnr/api/v1/packages/fgimenez/tacoshop-chart/channels/alpha
+              value: {{ .Values.targetURL }}
             - name: FIELD
-              value: current
+              value: {{ .Values.field }}
