@@ -104,6 +104,12 @@ func check(organisation, project, channel, field string) (string, error) {
 func action(organisation, project, channel string) error {
 	// TODO trigger generic job
 	// cmd := exec.Command("kubectl", "create", "-f /jobs/default.yaml")
+
+	err := switchToTarget(channel)
+	if err != nil {
+		return err
+	}
+
 	releaseExists, err := checkRelease(project)
 	if err != nil {
 		return err
@@ -153,4 +159,12 @@ func checkRelease(project string) (bool, error) {
 		return false, err
 	}
 	return found, nil
+}
+
+func switchToTarget(channel string) error {
+	cmd := exec.Command("kubectl", "config", "use-context", "gke_alpha-cluster_europe-west1-b_"+channel)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	return cmd.Run()
 }
