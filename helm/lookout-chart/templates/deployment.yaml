@@ -14,7 +14,7 @@ spec:
       containers:
         - name: {{ .Values.taskID }}
           image: quay.io/fgimenez/lookout:{{ .SHA }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: ORGANISATION
               value: {{ .Values.organisation }}
