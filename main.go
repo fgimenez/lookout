@@ -22,7 +22,7 @@ func main() {
 		}
 
 		if os.Args[1] == "--help" {
-			fmt.Println("Yet another tacoshop")
+			fmt.Println("Yet another lookout")
 			return
 		}
 	}
