@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lookout-{{ .Values.taskID }}
+  labels:
+    app: lookout-{{ .Values.taskID }}
+spec:
+  selector:
+    app: lookout-{{ .Values.taskID }}

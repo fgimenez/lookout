@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: lookout-{{ .Values.taskID }}
+  labels:
+    app: lookout-{{ .Values.taskID }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: lookout-{{ .Values.taskID }}
+    spec:
+      containers:
+        - name: lookout-{{ .Values.taskID }}
+          image: quay.io/fgimenez/lookout:{{ .SHA }}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TARGET_URL
+              value: {{ .Values.targetURL }}
+            - name: FIELD
+              value: {{ .Values.field }}
