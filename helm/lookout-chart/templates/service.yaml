@@ -7,3 +7,5 @@ metadata:
 spec:
   selector:
     app: lookout-{{ .Values.taskID }}
+  ports:
+    - port: 9999
