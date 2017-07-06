@@ -1,4 +1,4 @@
-taskID: tacoshop-alpha
+taskID: lookout-tacoshop-alpha
 targetURL: https://quay.io/cnr/api/v1/packages/fgimenez/tacoshop-chart/channels/alpha
 field: current
 targetCluster: alpha

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: lookout-{{ .Values.taskID }}
+  name: {{ .Values.taskID }}
   labels:
-    app: lookout-{{ .Values.taskID }}
+    app: {{ .Values.taskID }}
 spec:
   selector:
-    app: lookout-{{ .Values.taskID }}
+    app: {{ .Values.taskID }}
   ports:
     - port: 9999
